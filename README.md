@@ -1,6 +1,6 @@
 ## Solución
 
-Los datos cargados desde Excel son limpiados y validados antes de calcular indicadores, 
+aplicacion, los datos cargados desde Excel son limpiados y validados antes de calcular indicadores, 
 rankings y acciones sugeridas para clientes.
 
 Adicionalmente, la aplicación permite realizar preguntas sobre la información
