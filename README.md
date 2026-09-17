@@ -12,3 +12,5 @@ búsqueda.
        alt="Arquitectura del dashboard de inteligencia comercial"
        width="900">
 </p>
+
+https://inteligencia-comercial-alkomprar.streamlit.app/
