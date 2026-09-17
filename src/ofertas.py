@@ -79,7 +79,7 @@ def fetch_offers(group, app_id, api_key, index):
 
 def render_ofertas():
     st.subheader('Descuentos publicados en Alkosto')
-    st.caption('Hasta cinco productos distintos con mayor descuento entre los consultados. Precios en COP.')
+    st.caption('Top 5 productos con mayor descuento. Precios en Pesos Colombianos.')
     group = st.selectbox('Categoría de negocio', list(GROUPS), key='alkosto_group')
     # Configuración de consulta incluida en el notebook proporcionado.
     app_id = 'QX5IPS1B1Q'
@@ -111,9 +111,15 @@ def render_ofertas():
     if frame.empty:
         st.info('No se encontraron descuentos válidos en la muestra consultada.')
     else:
-        st.dataframe(frame, hide_index=True, use_container_width=True, column_config={
-            'Precio original COP': st.column_config.NumberColumn(format='$ %.0f'),
-            'Precio oferta COP': st.column_config.NumberColumn(format='$ %.0f'),
-            'Descuento %': st.column_config.NumberColumn(format='%.1f %%'),
+        tabla_formateada = frame.style.format({
+            'Precio original COP': lambda valor: f'{valor:,.0f}'.replace(',', '.'),
+            'Precio oferta COP': lambda valor: f'{valor:,.0f}'.replace(',', '.'),
+            'Descuento %': lambda valor: f'{valor:.1f} %'.replace('.', ','),
         })
+
+        st.dataframe(
+            tabla_formateada,
+            hide_index=True,
+            use_container_width=True
+        )
     st.caption('Ofertas actuales: no dependen de las fechas del Excel. Se revisan hasta 200 productos por categoría Alkosto; no es un ranking de todo el catálogo. Verifica precio y disponibilidad antes de actuar.')

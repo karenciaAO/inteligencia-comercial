@@ -73,10 +73,10 @@ def main():
     inactive = st.sidebar.number_input('Días sin compra para reactivar',30,730,90,step=15)
     intent = st.sidebar.number_input('Ventana de intención (días)',7,180,30,step=1)
     actions = customer_actions(s,data.interactions,end,Rules(inactive_days=inactive,intent_days=intent))
-    st.caption(f'Ventas: {start:%d/%m/%Y} — {end:%d/%m/%Y} · Importes en la unidad monetaria del archivo; moneda no documentada.')
+    st.caption(f'Ventas: {start:%d/%m/%Y} — {end:%d/%m/%Y} · Monedad Pesos Colombianos')
     excluded = int(data.audit.loc[data.audit.Etapa.str.contains('excluid'), 'Filas'].sum())
     if excluded:
-        st.caption(f'Alcance: clientes registrados y operaciones financieramente consistentes. {excluded:,} filas de origen excluidas; detalle técnico disponible fuera del dashboard.')
+        st.caption(f'Alcance: clientes registrados y operaciones financieramente consistentes. {excluded:,} filas de origen excluidas')
     page = st.radio(
         'Vista',
         [
@@ -131,7 +131,7 @@ def main():
                 'pero ese número no determina su acción. Las reglas actuales '
                 'utilizan margen, interacciones, días sin comprar y valor comprado.'
             )
-        st.caption(f'Historia completa hasta {end:%d/%m/%Y}. Referencia RFM: día siguiente al corte. No aplica fecha inicial, canal, categoría ni zona.')
+        st.caption(f'Historia completa hasta {end:%d/%m/%Y}. No es un Método RFM, Implementé un motor de reglas comerciales que prioriza acciones por cliente segun recencia, monto, rentabilidad e interacciones comerciales.')
         # st.info('Propuestas para revisión humana. El archivo no contiene correo ni consentimiento; no se envían mensajes.')
         if not actions.empty:
             st.caption('**Categoría_Preferida**: categoría con mayor venta histórica neta del cliente. Útil para ofertas dirigidas.')
@@ -155,7 +155,7 @@ def main():
     #    st.markdown((ROOT/'docs'/'METODOLOGIA.md').read_text(encoding='utf-8'))
     elif page=='Preguntar':
         st.subheader('Consulta el negocio por escrito')
-        st.caption('Consultor de reglas, no IA generativa. Fechas y filtros se seleccionan en la barra lateral. El resultado indica lo interpretado.')
+        st.caption('Fechas y filtros se seleccionan en la barra lateral. El resultado indica lo interpretado.')
         example = st.selectbox('Ejemplos soportados',EXAMPLES)
         question = st.text_input('Tu pregunta',value=example,key=f'question_{example}')
         if question.strip():
@@ -169,7 +169,7 @@ def main():
         st.info('No hay ventas para estos filtros. Amplía el periodo o la selección.')
     elif page=='Resumen ejecutivo':
         st.subheader('Indicadores del periodo')
-        st.caption('Resumen general: venta neta, costo, margen, transacciones, clientes únicos, productos, PDVs, descuento promedio y unidades. Margen % = Margen / Venta neta (ponderado, no promedio).')
+        st.caption('Resumen general: venta neta, costo, margen, transacciones, clientes únicos, productos, PDVs, descuento promedio y unidades. Margen % = Margen / Venta neta (ponderado).')
         table(summary(d),'indicadores')
         st.subheader('Ventas y margen por categoría y subcategoría')
 
@@ -195,23 +195,23 @@ def main():
         metric = st.selectbox('Tendencia',['Venta_Neta','Margen'])
         m = monthly(d)
         st.plotly_chart(line_chart(m,metric),use_container_width=True)
-        st.caption('Rojo: máximo y mínimo mensual observado por año. Meses sin registros no equivalen a ventas cero. No se garantiza cobertura completa de años o meses.')
+        st.caption('Rojo: máximo y mínimo mensual observado por año.')
         table(m,'mensual')
     else:
         st.subheader('Desempeño comercial')
-        st.caption('Ranking agrupando por la dimensión seleccionada. Al ordenar por Producto_ID, se incluye la Categoría para contexto. Métricas: Venta neta (facturación), Margen (rentabilidad absoluta), Margen % (rentabilidad relativa).')
+        st.caption('Ranking agrupando por la dimensión seleccionada. Métricas: Venta neta (facturación), Margen (rentabilidad absoluta), Margen % (rentabilidad relativa).')
         dimension = st.selectbox('Agrupar por',['Canal','Categoria','Subcategoria','Marca','Producto_ID','PDV','Zona','Tipo_Cliente_Actual', 'Formato'])
         metric = st.selectbox('Ordenar por',['Venta_Neta','Margen','Margen_Pct'])
         n = st.slider('Cantidad de filas',5,100,20)
         table(ranking(d,dimension,metric,n),'ranking')
         st.subheader('Descuentos y rentabilidad')
-        st.caption('Distribución de transacciones por tramos de descuento. Muestra cómo el descuento promedio afecta el margen % en cada tramo. Tramos: Sin descuento, ≤10%, 10–20%, 20–30%, >30%.')
+        st.caption('Distribución de transacciones por rango de descuentos. Muestra cómo el descuento afecta el margen % en cada rango de descuentos. Rangos: Sin descuento, ≤10%, 10–20%, 20–30%, >30%.')
         table(discounts(d),'descuentos')
         st.subheader('Ventas según contexto de campaña')
-        st.caption('Grupos excluyentes para evitar doble conteo: Sin campaña, Una campaña, Varias campañas. No son conversiones atribuibles ni ROI.')
+        st.caption('Grupos: Sin campaña, Una campaña, Varias campañas.')
         table(summary(d,['Contexto_Campania']),'contexto_campania')
         st.subheader('Combinaciones de campañas coincidentes')
-        st.caption('Ventas donde coinciden múltiples campañas por canal. Útil para detectar solapamientos; no implica atribución causal.')
+        st.caption('Ventas donde coinciden múltiples campañas por canal. Útil para detectar solapamientos; no implica atribución causal, debido a que no tenemos como relacionar especificamente cual descuento se aplico.')
         table(
             summary(d, ['Canal', 'Campanias', 'Tipo_Campania']),
             'combinaciones_campanias'
