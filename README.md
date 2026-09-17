@@ -1,4 +1,4 @@
-## Solución
+## Solución https://inteligencia-comercial-alkomprar.streamlit.app/
 
 aplicacion, los datos cargados desde Excel son limpiados y validados antes de calcular indicadores, 
 rankings y acciones sugeridas para clientes.
@@ -13,4 +13,4 @@ búsqueda.
        width="900">
 </p>
 
-https://inteligencia-comercial-alkomprar.streamlit.app/
+
