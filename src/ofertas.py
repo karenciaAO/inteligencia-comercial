@@ -107,7 +107,7 @@ def render_ofertas():
             return
     frame = state['frame']
     local_time = state['fetched_at'].astimezone(ZoneInfo('America/Bogota'))
-    st.caption(f'Consultado: {local_time:%d/%m/%Y %H:%M} (Colombia). Caché de seis horas.')
+    st.caption(f'Consultado: {local_time:%d/%m/%Y %H:%M} (Colombia).')
     if frame.empty:
         st.info('No se encontraron descuentos válidos en la muestra consultada.')
     else:
@@ -122,4 +122,4 @@ def render_ofertas():
             hide_index=True,
             use_container_width=True
         )
-    st.caption('Ofertas actuales: no dependen de las fechas del Excel. Se revisan hasta 200 productos por categoría Alkosto; no es un ranking de todo el catálogo. Verifica precio y disponibilidad antes de actuar.')
+    st.caption('Ofertas actuales')
