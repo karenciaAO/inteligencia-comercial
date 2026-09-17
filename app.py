@@ -155,7 +155,7 @@ def main():
     #    st.markdown((ROOT/'docs'/'METODOLOGIA.md').read_text(encoding='utf-8'))
     elif page=='Preguntar':
         st.subheader('Consulta el negocio por escrito')
-        st.caption('Fechas y filtros se seleccionan en la barra lateral. El resultado indica lo interpretado.')
+        st.caption('Fechas y filtros se seleccionan en la barra lateral. El resultado indica lo que se interpretado.')
         example = st.selectbox('Ejemplos soportados',EXAMPLES)
         question = st.text_input('Tu pregunta',value=example,key=f'question_{example}')
         if question.strip():
